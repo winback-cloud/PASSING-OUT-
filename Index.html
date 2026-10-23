@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BMAP 5th Batch Passing Out Countdown</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #0b0f19; /* Deep cosmic space color */
+            color: #ffffff;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            flex-direction: column;
+            padding: 20px;
+            overflow: hidden; /* Keeps particles contained */
+            position: relative;
+        }
+        
+        /* Floating background particles */
+        .particle {
+            position: absolute;
+            border-radius: 50%;
+            pointer-events: none;
+            opacity: 0.3;
+            animation: floatUp linear infinite;
+        }
+        @keyframes floatUp {
+            0% {
+                transform: translateY(100vh) translateX(0);
+                opacity: 0;
+            }
+            10% { opacity: 0.4; }
+            90% { opacity: 0.4; }
+            100% {
+                transform: translateY(-10vh) translateX(50px);
+                opacity: 0;
+            }
+        }
+
+        h1 {
+            font-size: 2.5rem;
+            margin-bottom: 40px;
+            text-align: center;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            background: linear-gradient(45deg, #ff007f, #ffaa00, #00f0ff);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-shadow: 0 0 30px rgba(255, 0, 127, 0.2);
+            z-index: 10;
+        }
+        .countdown-container {
+            display: flex;
+            gap: 20px;
+            flex-wrap: wrap;
+            justify-content: center;
+            z-index: 10;
+        }
+        .time-box {
+            background: rgba(255, 255, 255, 0.03);
+            border: 2px solid transparent;
+            border-radius: 16px;
+            padding: 25px;
+            min-width: 120px;
+            text-align: center;
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(8px);
+            transition: transform 0.3s ease;
+        }
+        .time-box:hover {
+            transform: translateY(-5px);
+        }
+        
+        /* Neon borders */
+        #days-box { border-image: linear-gradient(to bottom, #ff007f, #7928ca) 1; }
+        #hours-box { border-image: linear-gradient(to bottom, #00f0ff, #0070f3) 1; }
+        #minutes-box { border-image: linear-gradient(to bottom, #00ff66, #009900) 1; }
+        #seconds-box { border-image: linear-gradient(to bottom, #ffaa00, #ff5500) 1; }
+
+        .number {
+            font-size: 3.5rem;
+            font-weight: 800;
+            line-height: 1;
+            margin-bottom: 5px;
+            font-variant-numeric: tabular-nums;
+        }
+        /* Vibrant neon glows */
+        #days { color: #ff007f; text-shadow: 0 0 15px rgba(255, 0, 127, 0.5); }
+        #hours { color: #00f0ff; text-shadow: 0 0 15px rgba(0, 240, 255, 0.5); }
+        #minutes { color: #00ff66; text-shadow: 0 0 15px rgba(0, 255, 102, 0.5); }
+        #seconds { color: #ffaa00; text-shadow: 0 0 15px rgba(255, 170, 0, 0.5); }
+
+        .label {
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            color: #94a3b8;
+            font-weight: 600;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>BMAP 5th Batch Passing Out</h1>
+
+    <div class="countdown-container">
+        <div class="time-box" id="days-box">
+            <div class="number" id="days">00</div>
+            <div class="label">Days</div>
+        </div>
+        <div class="time-box" id="hours-box">
+            <div class="number" id="hours">00</div>
+            <div class="label">Hours</div>
+        </div>
+        <div class="time-box" id="minutes-box">
+            <div class="number" id="minutes">00</div>
+            <div class="label">Minutes</div>
+        </div>
+        <div class="time-box" id="seconds-box">
+            <div class="number" id="seconds">00</div>
+            <div class="label">Seconds</div>
+        </div>
+    </div>
+
+    <script>
+        // Target Date: Dec 13, 2026
+        const targetDate = new Date(2026, 11, 13, 0, 0, 0).getTime();
+
+        function updateCountdown() {
+            const now = new Date().getTime();
+            const difference = targetDate - now;
+
+            if (difference < 0) {
+                document.querySelector("h1").innerText = "Congratulations BMAP 5th Batch!";
+                document.querySelector(".countdown-container").style.display = "none";
+                clearInterval(interval);
+                return;
+            }
+
+            const days = Math.floor(difference / (1000 * 60 * 60 * 24));
+            const hours = Math.floor((difference % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            const minutes = Math.floor((difference % (1000 * 60 * 60)) / (1000 * 60));
+            const seconds = Math.floor((difference % (1000 * 60)) / 1000);
+
+            document.getElementById("days").innerText = days.toString().padStart(2, '0');
+            document.getElementById("hours").innerText = hours.toString().padStart(2, '0');
+            document.getElementById("minutes").innerText = minutes.toString().padStart(2, '0');
+            document.getElementById("seconds").innerText = seconds.toString().padStart(2, '0');
+        }
+
+        const interval = setInterval(updateCountdown, 1000);
+        updateCountdown();
+
+        // Generate floating background particles dynamically
+        const colors = ['#ff007f', '#00f0ff', '#00ff66', '#ffaa00'];
+        for (let i = 0; i < 40; i++) {
+            const particle = document.createElement('div');
+            particle.classList.add('particle');
+            
+            // Randomize size, position, color, and speed
+            const size = Math.random() * 6 + 2;
+            particle.style.width = `${size}px`;
+            particle.style.height = `${size}px`;
+            particle.style.background = colors[Math.floor(Math.random() * colors.length)];
+            particle.style.left = `${Math.random() * 100}vw`;
+            
+            const duration = Math.random() * 10 + 10;
+            particle.style.animationDuration = `${duration}s`;
+            particle.style.animationDelay = `${Math.random() * -20}s`; // Staggers initial entry
+            
+            if (size > 5) {
+                particle.style.boxShadow = `0 0 10px ${particle.style.background}`;
+            }
+
+            document.body.appendChild(particle);
+        }
+    </script>
+</body>
+</html>
